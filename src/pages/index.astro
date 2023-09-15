@@ -1,14 +1,9 @@
 ---
 import Footer from "../components/Footer.astro"
+import Head from "../components/Head.astro"
 ---
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.jpg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Bytin'</title>
-	</head>
+  <Head/>
   <body class="bg-slate-900 text-slate-300 flex flex-col [&>footer]:mt-auto h-screen">
     <header class="h-full flex items-center">
       <nav class="w-full flex flex-col justify-center items-center gap-10 p-5">
