@@ -1,16 +1,21 @@
 ---
-
+import Footer from "../components/Footer.astro"
 ---
-
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>Bytin'</title>
 	</head>
-	<body>
-		<h1>Astro</h1>
+  <body class="bg-slate-900 text-slate-300 flex flex-col [&>footer]:mt-auto h-screen">
+    <header class="h-full flex items-center">
+      <nav class="w-full flex flex-col justify-center items-center gap-10 p-5">
+        <a class="underline hover:scale-125 transition px-2" href="/">Home</a>
+        <a class="hover:underline hover:scale-125 transition px-2" href="blog/">Blog</a>
+      </nav>
+    </header>
+    <Footer />
 	</body>
 </html>
