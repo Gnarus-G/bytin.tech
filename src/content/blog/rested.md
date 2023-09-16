@@ -76,3 +76,41 @@ rstd run ./api.rd
 
 This is pretty much all you need if you want to be in the routine of running http requests manually. And because it is just a cli tool, you can pretty much use it combination with
 any other cli tool, unix utility or otherwise.
+
+### They could.
+
+I am running the experiment. So far I've implemented what you see above and more.
+
+```
+Language/Interpreter for easily defining and running requests to an http server.
+
+Usage: rstd [OPTIONS] <COMMAND>
+
+Commands:
+  run         Run a script written in the language
+  scratch     Open your default editor to start editing a temporary file
+  env         Operate on the environment variables available in the runtime
+  completion  Generate a completions file for a specified shell
+  lsp         Start the rested language server
+  config      Configure, or view current configurations
+  help        Print this message or the help of the given subcommand(s)
+
+Options:
+  -l, --level <LEVEL>  Set log level [default: info]
+  -h, --help           Print help
+  -V, --version        Print version
+```
+
+I am calling the project `rested` and it's al ready a better experience than Postman.
+So I win. If you're so inclined, try it, open issues, and maybe make feature request: [https://github.com/Gnarus-G/rested](https://github.com/Gnarus-G/rested)
+
+```sh
+cargo install rested
+```
+
+### Conclusion
+
+In the simple case curl is still best, becuase it requires the least ceremony before you fire the request. I think this has the potential to reduce a lost of wasted time.
+Especially thanks to the lsp intergration, and the scratch interface which eliminates the friction of choosing where to save files that hold your one-off requests.
+Again this is all still experimental, but I'm interested to see if this idea has enough merit to appeal
+to anyone other than me.
