@@ -21,7 +21,6 @@ const { Content } = await post.render();
   <body class="bg-slate-900 text-slate-300 flex flex-col [&>footer]:mt-auto h-screen">
     <main class="container mx-auto prose lg:prose-xl prose-invert">
       <h1 class="text-3xl">{post.data.title}</h1>
-      <h3 class="text-xl">{post.data.description}</h1>
       <Content />
     </main>
     <Footer/>

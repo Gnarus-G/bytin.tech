@@ -3,8 +3,15 @@ title: "Better than Postman, better than curl"
 description: "Motivation for a DSL Rest Client to replace GUI ones."
 ---
 
-I started web dev using post man. I mean all the apps I have worked on, I have been fullstack; but whenever I could not just call the api from the UI code
-while developing, check the network tab ect..; I would use postman. I was never a power user of postman, never paid, never did load testing or anything like that. I went as
+### In the beginning, there was Postman
+
+From the beginning of my career, I have been a fullstack web dev. I started with SpringBoot and then learned React quickly after.
+
+If I wanted to test and api endpoint while developing it, I would just call it from the UI code and look that network tab - or `console.log` -
+to debug, because of course the UI code and the backend code is all part of one usecase/feature.
+
+But sometimes, I would develop the API in isolation and so I would use postman. Mind you,
+I was never a power user of postman, never paid, never did load testing or anything like that. I only went as
 far as using environment variables, and graphql.
 
 At some point, I skilled up and started using Vim motions - shout out Ben Awad for the video that convinced me to do so. Later, I started using neovim. I use neovim, btw.
@@ -42,10 +49,10 @@ get /users {
 //... any other requests can be added to the same file
 ```
 
-Say the file is `.api.rd`, you can just run it.
+Say the file is `./api.rd`, you can just run it.
 
 ```sh
-rstd run .api.rd
+rstd run ./api.rd
 
 ```
 
