@@ -44,13 +44,17 @@ into your request - like having a base url, or a common bearer token.
 
 ### They so often wondered if they should, that they never pondered if they could.
 
+The problem is simple. I want to open a file define an http request and then run it. Already I thought to do what I have seen a coworker do: write curl commands
+is a shell script. I don't like that as much because reusing values, and defining json in the curl command won't be as simple and fun. And so...
+
 Would not a custom DSL for defining REST requests be awesome for this, along with a cli and runtime that manage those reusable values as environment variables?
-I was already learning about parsers and interpreters, so this seemed doable.
+Yes, it would. Nevermind I was already learning about parsers and interpreters from [thorstenball](https://mrnugget.gumroad.com/)'s book, and this seemed like a
+good excuse to put those lessons to use.
 
 Nevermind Postman, I will just edit a text file; Thanks.
-Nevermind curl, I do not like the interface, especially when dealing with json bodies.
+Nevermind curl, I do not like the interface.
 
-I would much rather, just open a file and
+I would much rather, just open a file and write
 
 ```rd
 set BASE_URL env("devOrigin")
