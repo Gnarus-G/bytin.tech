@@ -1,6 +1,7 @@
 ---
-title: "Better than Postman, better than curl"
+title: "Testing APIs with a DSL"
 description: "Motivation for a DSL Rest Client to replace GUI ones."
+image: "/rested_thumbnail.png"
 ---
 
 ### In the beginning, there was Postman

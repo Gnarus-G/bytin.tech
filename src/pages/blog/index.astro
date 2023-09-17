@@ -15,9 +15,16 @@ const posts = await getCollection('blog');
 				<ul>
 					{
 						posts.map((post) => (
-							<li class="rounded-r rounded-bl bg-slate-700 hover:bg-slate-600 hover:scale-125 transition px-2">
+							<li class="rounded-lg bg-slate-800 hover:bg-slate-700 hover:scale-125 transition p-3">
 								<a href={`/blog/${post.slug}/`}>
-									<h3>{post.data.title}</h4>
+                  <figure>
+                    {post.data.image && 
+                      <img height={300} width={300} src={post.data.image} alt="article thumbnail"/>
+                    }
+                    <figcaption class="text-center">
+                      {post.data.title}
+                    </figcaption>
+                  </figure>
 								</a>
 							</li>
 						))
