@@ -2,6 +2,7 @@
 import { type CollectionEntry, getCollection } from 'astro:content';
 import Footer from '../../components/Footer.astro';
 import Head from "../../components/Head.astro"
+import Hero from "../../components/Hero.astro"
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog');
@@ -21,7 +22,7 @@ const { Content } = await post.render();
   <body class="bg-slate-900 text-slate-300 flex flex-col [&>footer]:mt-auto h-screen">
     <main class="container mx-auto prose lg:prose-xl prose-invert">
       <article>
-        {post.data.image && <img width={1020} height={510} src={post.data.image} alt="" />}
+        <Hero video={post.data.video} image={post.data.image}/>
         <h1 class="text-3xl">{post.data.title}</h1>
         <Content />
       </article>

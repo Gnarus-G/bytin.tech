@@ -1,0 +1,22 @@
+---
+type Props = {
+ video?: string,
+ image?: string
+}
+
+const {video, image} = Astro.props;
+---
+
+<div class="relative">
+  {image && <img class="aspect-video" width="100%" src={image} alt=""/>}
+  {video &&
+    <a class="absolute inset-0 flex justify-center items-center bg-slate-900 bg-opacity-70 hover:bg-opacity-50" 
+        href={video} 
+        target="_blank"
+      >
+      <svg class="w-24 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11.994 5s-6.251 0-7.82.408a2.585 2.585 0 0 0-1.766 1.778C2 8.756 2 12.004 2 12.004s0 3.262.408 4.806a2.545 2.545 0 0 0 1.766 1.766c1.581.42 7.82.42 7.82.42s6.263 0 7.832-.407a2.485 2.485 0 0 0 1.754-1.767c.42-1.556.42-4.805.42-4.805s.012-3.262-.42-4.83a2.47 2.47 0 0 0-1.754-1.755C18.257 5 11.994 5 11.994 5zm-1.99 4.003 5.202 3.001-5.201 2.99V9.003z"></path>
+      </svg>
+    </a>
+  }
+</div>

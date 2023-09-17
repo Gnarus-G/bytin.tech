@@ -5,6 +5,7 @@ const blog = defineCollection({
     title: z.string(),
     description: z.string(),
     image: z.string().optional(),
+    video: z.string().optional(),
     /* pubDate: z.coerce.date(), */
     /* updatedDate: z.coerce.date().optional(), */
   }),
