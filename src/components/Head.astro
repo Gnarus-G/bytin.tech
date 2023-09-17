@@ -1,14 +1,13 @@
 ---
 interface Props {
+  title?: string;
+  description?: string;
 	image?: string;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const title = "bytin'";
-const description = "Hi I'm Gnarus G. Welcome to my website!"
-
-const { image = '/blog-placeholder-1.jpg' } = Astro.props;
+const { title = "bytin'", description = "Hi I'm Gnarus G. Welcome to my website!", image = '/favicon.jpg' } = Astro.props;
 ---
 
 <head>
