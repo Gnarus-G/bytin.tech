@@ -18,7 +18,7 @@ const { Content } = await post.render();
 ---
 
 <html lang="en">
-  <Head/>
+  <Head image={post.data.image}/>
   <body class="bg-slate-900 text-slate-300 flex flex-col [&>footer]:mt-auto h-screen">
     <main class="container mx-auto prose lg:prose-xl prose-invert">
       <article>
