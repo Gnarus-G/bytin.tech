@@ -377,5 +377,5 @@ You can find the project on github, https://github.com/Gnarus-G/maccel,
 with install instructions.
 
 I'd love some expert help in this endeavor, especially validating the math and precision of the algorithm as well as packaging for different distros.
-I'm the worst candidate for this kind of project; Terrible at match, Complete noob at developing for linux systems.
+I'm arguably the worst candidate for this kind of project; Terrible at match, Complete noob at developing for linux systems.
 My only redeeming quality is that I have no life, and can afford to persevere through and land here. What fun though!
