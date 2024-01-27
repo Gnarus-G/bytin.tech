@@ -226,17 +226,147 @@ We gotta normalize our `[x, y]` vector and apply that `f(v)` to that normal vect
 
 ### Coding the function
 
-...
+Implementation would be pretty straight forward, but it's hard to use floating point numbers in the linux kernel. So I followed the lead of this leetmouse [fork](https://github.com/korsilyn/leetmouse)
+and use the [fixedptc](https://sourceforge.net/p/fixedptc/code/ci/default/tree/) header only library. This library provides facilities for precise arithmetic operations on integers.
+
+That context is required to understand why a very simple function might become like the one below.
+
+```c
+/**
+ * Calculate the normalized factor by which to multiply the input vector
+ * in order to get the desired output speed.
+ *
+ */
+extern inline fixedpt acceleration_factor(fixedpt input_speed,
+                                          fixedpt param_accel,
+                                          fixedpt param_offset,
+                                          fixedpt param_output_cap) {
+
+  input_speed = fixedpt_sub(input_speed, param_offset);
+
+  fixedpt accel_factor = FIXEDPT_ONE;
+
+  if (input_speed > FIXEDPT_ZERO) {
+    accel_factor =
+        fixedpt_add(FIXEDPT_ONE, fixedpt_mul((param_accel), input_speed));
+
+    if (param_output_cap != FIXEDPT_ZERO && accel_factor > param_output_cap) {
+      accel_factor = param_output_cap;
+    }
+  }
+
+  return accel_factor;
+}
+
+static inline AccelResult f_accelerate(s8 x, s8 y, u32 polling_interval,
+                                       fixedpt param_accel,
+                                       fixedpt param_offset,
+                                       fixedpt param_output_cap) {
+  AccelResult result = {.x = 0, .y = 0};
+
+  static fixedpt carry_x = FIXEDPT_ZERO;
+  static fixedpt carry_y = FIXEDPT_ZERO;
+
+  fixedpt dx = fixedpt_fromint(x);
+  fixedpt dy = fixedpt_fromint(y);
+
+  fixedpt distance =
+      fixedpt_sqrt(fixedpt_add(fixedpt_mul(dx, dx), fixedpt_mul(dy, dy)));
+
+  fixedpt speed_in = fixedpt_div(distance, fixedpt_fromint(polling_interval));
+
+  fixedpt accel_factor = acceleration_factor(speed_in, param_accel,
+                                             param_offset, param_output_cap);
+
+  fixedpt dx_out = fixedpt_mul(dx, accel_factor);
+  fixedpt dy_out = fixedpt_mul(dy, accel_factor);
+
+  dx_out = fixedpt_add(dx_out, carry_x);
+  dy_out = fixedpt_add(dy_out, carry_y);
+
+  result.x = fixedpt_toint(dx_out);
+  result.y = fixedpt_toint(dy_out);
+
+  carry_x = fixedpt_sub(dx_out, fixedpt_fromint(result.x));
+  carry_y = fixedpt_sub(dy_out, fixedpt_fromint(result.y));
+
+  return result;
+}
+```
+
+At this point I understand enough to be able to audit one of these leetmouse forks and know if I am getting RawAccel style linear acceleration or modify their code
+to my liking, but that's too presumptuous. I've got an implementation here already, and can seamlessly proceed to port one more feature of RawAccel: the UI.
 
 ### Using multiple languages for the project
 
-...
+I don't know to make UI's in `C`. I know how to make cli's in `rust`, which I'm comfortable with. I've never a TUI, and that should be easier than a GUI. So time to learn
+`ratatui`, a rust crate for make Terminal UI's. Importantly, c can talk to rust through the System V abi and I can statically link my C code to my rust code when it's relevant.
+
+`cargo` make this easy with a `build.rs` file.
+
+```rs
+use std::{env, path::PathBuf};
+
+fn main() {
+    let out = PathBuf::from(env::var("OUT_DIR").unwrap());
+
+    cc::Build::new().file("src/libmaccel.c").compile("maccel");
+
+    println!("cargo:rust-link-search=static={}", out.display());
+
+    println!("cargo:rerun-if-changed=src/libmaccel.c");
+    println!("cargo:rerun-if-changed=../driver/accel.h");
+}
+```
 
 ### Managing files in linux
 
-...
+One of the challenges of this project was figuring how to use the linux file system to manage the user provided parameters. I wanted to make sure that you don't need
+to run the `maccel` cli with `sudo` to modify the kernel module's parameters, and to make sure that the values set by the user are remembered across reboots.
+
+So we end up needing something like this make script.
+
+```make
+install: default
+	@sudo cp -v $(DRIVERDIR)/*.ko $(MODULEDIR);
+	@sudo chown -v root:root $(MODULEDIR)/*.ko;
+	@sudo insmod $(MODULEDIR)/*.ko;
+	sudo groupadd -f maccel;
+	sudo depmod;
+	sudo chown -v :maccel /sys/module/maccel/parameters/*;
+	ls -l /sys/module/maccel/parameters/*
+	@echo '[Recommended] Add yourself to the "maccel" group'
+	@echo '[Recommended] usermod -aG maccel $$USER'
+```
+
+For ease of use, I provide [udev rules](https://wiki.archlinux.org/title/Udev)
+
+```make
+udev_install: build_cli
+	sudo install -m 644 -v -D `pwd`/udev_rules/99-maccel.rules /usr/lib/udev/rules.d/99-maccel.rules
+	sudo install -m 755 `pwd`/maccel-cli/target/release/maccel /usr/local/bin/maccel
+	sudo install -m 755 -v -D `pwd`/udev_rules/maccel_bind /usr/lib/udev/maccel_bind
+```
+
+So that on reboot the `maccel_bin` shell script invoked by the udev rules bind all appropriate devices (mice)
+and sets the last values the user set for the parameters.
+
+```sh
+maccel bind $1 &> /var/log/maccel-cli;
+
+# For persisting parameters values across reboots
+LIB_DIR=/var/lib/maccel
+mkdir -p $LIB_DIR
+chown -v :maccel $LIB_DIR
+chmod -v g+w "$LIB_DIR"
+ls $LIB_DIR/set_last_*_value.sh | xargs cat | sh &> /var/log/maccel-reset-scripts
+```
 
 ### Conclusion
 
-I'd love some expert help in this endeavor. I'm the worst candidate for this kind of project; Terrible at match, Complete noob at developing for linux
-systems. My only redeeming quality is that I have no life, and can afford to persevere through and land here. What fun though!
+You can find the project on github: https://github.com/Gnarus-G/maccel
+You can find install instruction.
+
+I'd love some expert help in this endeavor, especially validating the math and precision of the algorithm as well as packaging for different distros.
+I'm the worst candidate for this kind of project; Terrible at match, Complete noob at developing for linux systems.
+My only redeeming quality is that I have no life, and can afford to persevere through and land here. What fun though!
