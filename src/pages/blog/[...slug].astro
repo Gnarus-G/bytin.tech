@@ -23,7 +23,8 @@ const { Content } = await post.render();
     <main class="container mx-auto prose lg:prose-xl prose-invert">
       <article>
         <Hero video={post.data.video} image={post.data.image}/>
-        <h1 class="text-3xl">{post.data.title}</h1>
+        <h1 class="text-3xl" style="margin-bottom: 0;">{post.data.title}</h1>
+        <h6 class="font-semibold pl-5">{post.data.description}</h6>
         <Content />
       </article>
     </main>
