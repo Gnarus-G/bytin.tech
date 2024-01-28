@@ -373,6 +373,12 @@ ls $LIB_DIR/set_last_*_value.sh | xargs cat | sh &> /var/log/maccel-reset-script
 
 ### Conclusion
 
+I geniunely expected to take a least a month of spending most nights on this, because I thought I
+would need to know a lot more about all this than I do at this point to get something reliably working.
+Apparently, the limiter wasn't my IQ, it was my resolve - Even though I thought it might take me months
+to do anything useful, I did it anyway - a different attitude than I did last year, and thankfully
+I found the energy for it.
+
 You can find the project on github, https://github.com/Gnarus-G/maccel,
 with install instructions.
 
