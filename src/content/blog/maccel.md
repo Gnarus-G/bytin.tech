@@ -328,6 +328,77 @@ fn main() {
 }
 ```
 
+In `../driver/accel.h` we have this function we export with `extern`:
+
+```c
+/**
+ * Calculate the normalized factor by which to multiply the input vector
+ * in order to get the desired output speed.
+ *
+ */
+extern inline fixedpt acceleration_factor(fixedpt input_speed,
+                                          fixedpt param_accel,
+                                          fixedpt param_offset,
+                                          fixedpt param_output_cap) {
+//...
+}
+```
+
+And in rust we redeclare its prototype with the same 'symbol' for the identifier of the function - same function name - with syntax that rust understands
+in an `extern` block with the `C` ABI selected mostly so that rust understands how the function parameters will be passed in.
+
+```rs
+extern "C" {
+    fn acceleration_factor(
+        speed_in: i32,
+        param_accel: i32,
+        param_offset: i32,
+        param_output_cap: i32,
+    ) -> i32;
+}
+
+/// Ratio of Output speed to Input speed
+pub fn sensitivity(s_in: f32, params: Params) -> f64 {
+    let s_in = fixedptc::fixedpt(s_in);
+    let a_factor =
+        unsafe { acceleration_factor(s_in.0, params.accel, params.offset, params.output_cap) };
+    let a_factor: f32 = Fixedpt(a_factor).into();
+
+    return a_factor as f64;
+}
+```
+
+No we have this `sensitivity` function we use in rust to build a graph with the Chart widget from `ratatui`.
+
+```rs
+let data: Vec<_> = (0..100)
+    .map(|x| x as f32)
+    .map(|x| (x as f64, sensitivity(x, Params::new())))
+    .collect();
+
+let chart = Chart::new(vec![Dataset::default()
+    .name(format!("f(x) = 1 + {}⋅x", Param::Accel.display_name()))
+    .marker(symbols::Marker::Braille)
+    .graph_type(GraphType::Line)
+    .style(Style::default().green())
+    .data(&data)])
+.x_axis(x_axis)
+.y_axis(y_axis);
+
+frame.render_widget(
+    chart.block(
+        Block::default()
+            .borders(Borders::NONE)
+            .title("graph (Sensitivity = Speed_out / Speed_in)")
+            .bold(),
+    ),
+    main_layout[1],
+);
+```
+
+This ultimately gets us the graph we see in the TUI:
+![image](/maccel_tui_thumbnail.png)
+
 ### Managing files in linux
 
 One of the challenges of this project was figuring out how to use the linux file system to manage the user provided parameters. I wanted to make sure that the user doesn't need
