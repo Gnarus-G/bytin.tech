@@ -102,16 +102,38 @@ Options:
   -V, --version        Print version
 ```
 
-I am calling the project `rested` and it's already a better experience than Postman.
-So I win. If you're so inclined, try it, open issues, and maybe make a feature request: [https://github.com/Gnarus-G/rested](https://github.com/Gnarus-G/rested)
+Sometimes I forget how my language works, so the thing that makes me happiest is the language server I created using `tower-lsp`.
+I get completions for environment variables, declared identifiers and some common HTTP header names. I also get diagnotics about missing or invalid environment variables.
+
+![image](/rested_showcase.png)
+
+I went through a lot of iterations of how to shape my AST to accomodate the lsp, since I wanted to use the same parser that the cli uses in the
+language server. The main goal was to recover as much of the AST as practicable when errors happen, so the errors are represented as nodes in the
+AST.
+
+The error messages from the cli are pretty decent too, I dare say.
+
+![image](/rested_showcase_error.png)
+
+This is very important. Jonathan Blow has said that error messages are the UI to the compiler. Rust proves this for me, and I'm doing my current best to imitate it.
+I've probably done as much as is necessary in this area for such a dumb language, with what you see in the screenshot above.
+
+It's already a better experience than Postman, for me. I've been using at work for months. Using it to pipe json responses from API's through `jq` has been blissful.
+So I win.
+
+### Conclusion
+
+In the simplest case, curl is still best, because it requires the least ceremony before you fire the request. Still, I think this has the potential to reduce a lot of wasted time;
+especially thanks to the LSP integration, and the scratch interface which eliminates the friction of choosing where to save files that hold your one-off requests.
+Again this is all still experimental, but I'm interested to see if this idea has enough merit to appeal
+to anyone other than me.
+
+### If you care to try it.
 
 ```sh
 cargo install rested
 ```
 
-### Conclusion
+You will find bugs, but not too many because I used `rust`. BTW.
 
-In the simplest case, curl is still best, because it requires the least ceremony before you fire the request. I think this has the potential to reduce a lot of wasted time.
-Especially thanks to the LSP integration, and the scratch interface which eliminates the friction of choosing where to save files that hold your one-off requests.
-Again this is all still experimental, but I'm interested to see if this idea has enough merit to appeal
-to anyone other than me.
+Here is the [repo](https://github.com/Gnarus-G/rested) for more information and documentation.
