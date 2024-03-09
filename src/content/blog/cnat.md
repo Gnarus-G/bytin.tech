@@ -1,6 +1,7 @@
 ---
 title: "How to safely deprecate old tailwind utility classes"
 description: "I made a tool to help you deprecate tailwind utility classes from and old tailwind config file"
+image: "/cnat_thumbnail.png"
 ---
 
 ## The Problem
