@@ -24,8 +24,9 @@ in the old `tailwind.config.js`.
 In the root of your project. Run:
 
 ```sh
-npx tailwindcss -i <(echo '@tailwind utilities;') -o legacy-tw.css
-cnat prefix -i legacy-tw.css --prefix 'legacy-' .
+echo '@tailwind utilities;' > temp.css
+npx tailwindcss -i temp.css -o legacy-tw.css
+cnat prefix -i legacy-tw.css --prefix 'legacy-' ./src
 ```
 
 By default, `cnat prefix` will crawl through all the `class=*`, `className=*` in jsx elements and `className:*` in a `React.createElement` calls, inside of `ts|js|tsx|jsx` files.
@@ -33,20 +34,29 @@ It will match any class in the source code with classes found in `legacy-tw.css`
 
 Add the prefix in the legacy config file.
 
-```js
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+**Pro Tip**: Run your code formatter before running `cnat`. Check the formatted code into version control.
+Then run the command, and run your code formatter again. Now you can go through and check the git diffs to make sure everything is
+allright.
+
+```ts
+export default {
   prefix: "legacy-",
 };
 ```
 
-Then update your global css with the tailwind directives. Create a new file for the old configs, `tailwind.legacy.config.js`.
+Then update your global css with the tailwind directives. Rename the file for the old configs, `tailwind.legacy.config.ts`.
+
+```sh
+mv tailwind.config.ts tailwind.legacy.config.ts # or *.js if your tailwind config files aren't in typescript
+```
+
 Then, create an additional css file which the tailwind directives as such:
 
 `./legacy-tw.css`
 
 ```css
-@config "./tailwind.legacy.config.js";
+/* Make sure this is a real path in case you css file isn't at the root of the project. */
+@config "./tailwind.legacy.config.ts";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -56,29 +66,35 @@ Then, create an additional css file which the tailwind directives as such:
 
 Import that css file in where-ever the entry point for your project is. For example in Nextjs, you can add it to the `_app.tsx` file (pages directory version).
 
+Now you can init new configs.
+
+```sh
+npx tailwindcss init
+```
+
+Now in a new `global.css` file
+
+```css
+/* Again mind the path. */
+@config "./tailwind.config.ts"
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
 ```ts
+// Again mind the paths.
 import "./legacy-tw.css";
+import "./global.css";
 ```
 
-## Should you need this
+And now you can breathe.
 
-### Install
+## Usage
 
 ```sh
-cargo install cnat
+cnat prefix --help
 ```
-
-```sh
-npm install -g cnat
-```
-
-Or just execute it npm:
-
-```sh
-npx cnat
-```
-
-### Usage
 
 ```
 Apply a prefix to all the tailwind classes in every js file in a project
@@ -94,5 +110,38 @@ Options:
   -s, --scopes <SCOPES>...  Define scope within which prefixing happens. Example: --scopes 'att:className,*ClassName prop:classes fn:cva' [default: "att:class,className fn:createElement"]
   -h, --help                Print help
 ```
+
+### Scopes
+
+You may have tailwind classes in other places besides `className="..."`, or even `cva(...)`.
+For examples, the `classes` prop in mui components.
+
+You can define places for `cnat` to look for classes with `--scopes` or `-s` option.
+The syntax for a scope is <variant>:<...values>
+
+**Variants** are:
+
+- `fn` to target a function call (e.g 'fn:cva')
+- `att` to target a jsx attribute (e.g. 'att:className')
+- `prop` to target a jsx attribute (e.g. 'prop:className')
+
+**Values** are strings, and you can use a wildcard `*` at the begining or the end.
+For example 'att:className att:\*ClassName' will find classes all of these attributes
+
+```js
+<Btn
+  className="w-10 bg-red"
+  iconClassName="text-black"
+  textClassName="text-xl"
+/>
+```
+
+By default `cnat` use --scopes 'att:class,className fn:createElement'
+
+```sh
+cnat prefix -i legacy-tw.css --prefix 'legacy-' ./src --scopes 'att:class,className fn:createElement'
+```
+
+## Source Code
 
 Find the source code on [github](https://github.com/Gnarus-G/cnat).
