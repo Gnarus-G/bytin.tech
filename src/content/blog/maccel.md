@@ -28,7 +28,7 @@ like:
 - Feel shame and give up, "I don't really need mouse acceleration do I?"
 - Months pass by.
 - Nut up and try gain, landing this time on this github [leetmouse](https://github.com/Skyl3r/leetmouse) project: A linux driver like raw accel.
-- Be once agian confused and intimidated by idea of configuring a linux kernel module with `C` header file and compiling it only to find out
+- Be once again confused and intimidated by idea of configuring a linux kernel module with `C` header file and compiling it only to find out
   that you don't have this installed or you have the wrong version of that installed, whatever this and that may be.
 - Give up again, and let some time pass, forget how long.
 - Try to use `hidapi` in rust to read mouse inputs and update the pointer position through the `X` server. Fail hilariously, laugh at the jankiness and give up.
@@ -196,7 +196,7 @@ Now we use the variable to build the acceleration factor we apply to the `[x, y]
 
 `a` is a parameter provided by the user, call it `Accel`.
 
-So then actual vector we report to the kernel is `[x_f, y_f]`:
+So then the actual vector we report to the kernel is `[x_f, y_f]`:
 
 ```
 [x_f, y_f] = [x, y] ⋅ (1 + a * V)
@@ -216,11 +216,11 @@ f(v) = (1 + a * v) * v
 ```
 
 So with the intuition that we want the system to think that `f(v)` is how fast we moved the mouse, and not `v` which how fast we actually moved it.
-You feel like multiplying `[x, y]` by `f(v)`, if you're as full of bad ideas as I am, but that's like trying to apply two different speeds to the same movement.
+You might feel like multiplying `[x, y]` by `f(v)`, if you're as full of bad ideas as I am, but that's like trying to apply two different speeds to the same movement.
 We want the vector that we would actually get if we really did move our mouse with that `f(v)` -
 meaning we're in an event where this `f(v)` is the input speed for some input vector.
 
-We gotta normalize our `[x, y]` vector and apply that `f(v)` to that normal vector. In this way, we get `[x_f, y_f]`
+We need to normalize our `[x, y]` vector and apply that `f(v)` to that normal vector. In this way, we get `[x_f, y_f]`
 
 ```
 [x_normal, y_normal] = [x, y] ⋅ (1 / v)
@@ -444,7 +444,7 @@ ls $LIB_DIR/set_last_*_value.sh | xargs cat | sh &> /var/log/maccel-reset-script
 
 ### Conclusion
 
-I geniunely expected to take a least a month of spending most nights on this, because I thought I
+I genuinely expected to take a least a month of spending most nights on this, because I thought I
 would need to know a lot more about all this than I do at this point to get something reliably working.
 Apparently, the limiter wasn't my IQ, it was my resolve - Even though I thought it might take me months
 to do anything useful, I did it anyway - a different attitude than I did last year, and thankfully
@@ -454,5 +454,5 @@ You can find the project on github, https://github.com/Gnarus-G/maccel,
 with install instructions.
 
 I'd love some expert help in this endeavor, especially validating the math and precision of the algorithm as well as packaging for different distros.
-I'm arguably the worst candidate for this kind of project; Terrible at match, Complete noob at developing for linux systems.
+I'm arguably the worst candidate for this kind of project; Terrible at math, Complete noob at developing for linux systems.
 My only redeeming quality is that I have no life, and can afford to persevere through and land here. What fun though!

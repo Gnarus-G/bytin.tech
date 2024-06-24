@@ -107,7 +107,7 @@ I get completions for environment variables, declared identifiers and some commo
 
 ![image](/rested_showcase.png)
 
-I went through a lot of iterations of how to shape my AST to accomodate the lsp, since I wanted to use the same parser that the cli uses in the
+I went through a lot of iterations of how to shape my AST to accommodate the lsp, since I wanted to use the same parser that the cli uses in the
 language server. The main goal was to recover as much of the AST as practicable when errors happen, so the errors are represented as nodes in the
 AST.
 

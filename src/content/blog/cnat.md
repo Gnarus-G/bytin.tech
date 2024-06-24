@@ -31,7 +31,7 @@ cnat prefix -i legacy-tw.css --prefix 'legacy-' ./src
 
 **Pro Tip**: Run your code formatter before running `cnat`. Check the formatted code into version control.
 Then run the command, and run your code formatter again. Now you can go through and check the git diffs to make sure everything is
-allright.
+alright.
 
 By default, `cnat prefix` will crawl through all the `class=*`, `className=*` in jsx elements and `className:*` in a `React.createElement` calls, inside of `ts|js|tsx|jsx` files.
 It will match any class in the source code with classes found in `legacy-tw.css` (which contains every style that tailwind generates based on your config).
@@ -115,7 +115,7 @@ The syntax for a scope is <variant>:<...values>
 - `att` to target a jsx attribute (e.g. 'att:className')
 - `prop` to target a jsx attribute (e.g. 'prop:className')
 
-**Values** are strings, and you can use a wildcard `*` at the begining or the end.
+**Values** are strings, and you can use a wildcard `*` at the beginning or the end.
 For example 'att:className att:\*ClassName' will find classes all of these attributes
 
 ```js
